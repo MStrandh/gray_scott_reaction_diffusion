@@ -1,21 +1,23 @@
 import nervoussystem.obj.*;
 
-int clickSize = 10;
+int clickSize = 3;
 float timeDelta = 1;
 
-GrayScottReactionDiffusion grayScottModel;
+PImage testImage;
 
+GrayScottReactionDiffusion grayScottModel;
 GrayScottView grayScottView;
 
 void setup() {
   frameRate(60);
 
-  grayScottModel = new GrayScottReactionDiffusion(160, 160);
+  testImage = loadImage("images/test_image.png");
+  //testImage = loadImage("images/logo.png");
+
+  grayScottModel = new GrayScottReactionDiffusion(200, 200);
 
   grayScottView = new GrayScott2DView(grayScottModel);
   //grayScottView = new GrayScott3DView(grayScottModel);
-
-  grayScottModel.update(timeDelta);
 }
 
 int randomIndexGuy = 0;
@@ -28,15 +30,29 @@ void keyPressed() {
 }
 
 void draw() {
-  background(0);
+  background(255);
+
+  int pixelValue = 0;
+
+  for (int i = 0; i < testImage.pixels.length; i++) {
+    pixelValue = testImage.pixels[i] & 0xFF;
+
+    if (pixelValue == 0) {
+      int row = floor(i / grayScottModel.numColumns);
+      int col = floor(i % grayScottModel.numColumns);
+
+      grayScottModel.uValues[i] = 0.0;
+      grayScottModel.vValues[i] = 0.0;
+    }
+  }
 
   if (mousePressed) {
     addFluidInput(clickSize);
   }
 
-  //for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < 16; i++) {
     grayScottModel.update(timeDelta);
-  //}
+  }
 
   if (randomIndexGuy > 60) {
     grayScottView.update();
@@ -58,14 +74,18 @@ void draw() {
 }
 
 void addFluidInput(int size) {
-  int clickedRow = grayScottView.getClickedRow();
-  int clickedColumn = grayScottView.getClickedColumn();
+  int clickedRow = grayScottView.getClickedRow(mouseY);
+  int clickedColumn = grayScottView.getClickedColumn(mouseX);
 
-  int minX = max(0, clickedColumn - size);
-  int maxX = min(grayScottModel.numColumns, clickedColumn + size);
+  addFluidAt(size, clickedColumn, clickedRow);
+}
 
-  int minY = max(0, clickedRow - size);
-  int maxY = min(grayScottModel.numRows, clickedRow + size);
+void addFluidAt(int size, int x, int y) {
+  int minX = max(0, x - size);
+  int maxX = min(grayScottModel.numColumns, x + size);
+
+  int minY = max(0, y - size);
+  int maxY = min(grayScottModel.numRows, y + size);
 
   for (int row = minY; row < maxY; row++) {
     for (int col = minX; col < maxX; col++) {

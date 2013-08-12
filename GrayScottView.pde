@@ -11,11 +11,11 @@ class GrayScottView {
     this.cellHeight = cellHeight;
   }
   
-  int getClickedRow() {
+  int getClickedRow(int posX) {
     return 0;
   }
   
-  int getClickedColumn() {
+  int getClickedColumn(int posY) {
     return 0;
   }
   

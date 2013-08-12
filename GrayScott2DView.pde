@@ -6,12 +6,12 @@ class GrayScott2DView extends GrayScottView {
     size(grayScottModel.numColumns * cellWidth, grayScottModel.numRows * cellHeight, P2D);
   }
   
-  int getClickedRow() {
-    return floor(mouseY / grayScottView.cellHeight);
+  int getClickedRow(int posY) {
+    return floor(posY / grayScottView.cellHeight);
   }
   
-  int getClickedColumn() {
-    return floor(mouseX / grayScottView.cellWidth);
+  int getClickedColumn(int posX) {
+    return floor(posX / grayScottView.cellWidth);
   }
   
   void render() {

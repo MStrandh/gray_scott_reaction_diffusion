@@ -66,7 +66,7 @@ class GrayScottReactionDiffusion {
     float reactionRate = currU * currV * currV;
 
     float duDt = du * laplacianU - reactionRate + f * (1 - currU);
-    float dvDt = dv * laplacianV + reactionRate - ( k) * currV;
+    float dvDt = dv * laplacianV + reactionRate - (k) * currV;
 
     tmpValuesU[index] = clamp(currU + time * duDt, 0, 1);
     tmpValuesV[index] = clamp(currV + time * dvDt, 0, 1);

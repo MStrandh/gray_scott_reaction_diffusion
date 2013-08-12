@@ -17,12 +17,12 @@ class GrayScott3DView extends GrayScottView {
     size(grayScottModel.numColumns * cellWidth, grayScottModel.numRows * cellHeight, P3D);
   }
 
-  int getClickedRow() {
-    return floor(mouseY / cellHeight);
+  int getClickedRow(int posY) {
+    return floor(posY / cellHeight);
   }
 
-  int getClickedColumn() {
-    return floor(mouseX / cellWidth);
+  int getClickedColumn(int posX) {
+    return floor(posX / cellWidth);
   }
 
   void update() {
