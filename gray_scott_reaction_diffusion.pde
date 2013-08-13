@@ -11,13 +11,15 @@ GrayScottView grayScottView;
 void setup() {
   frameRate(60);
 
-  testImage = loadImage("images/test_image.png");
-  //testImage = loadImage("images/logo.png");
+  //testImage = loadImage("images/test_image.png");
+  testImage = loadImage("images/logo.png");
 
-  grayScottModel = new GrayScottReactionDiffusion(200, 200);
+  grayScottModel = new GrayScottReactionDiffusion(testImage.width, testImage.height);
 
-  grayScottView = new GrayScott2DView(grayScottModel);
-  //grayScottView = new GrayScott3DView(grayScottModel);
+  //grayScottView = new GrayScott2DView(grayScottModel);
+  grayScottView = new GrayScott3DView(grayScottModel);
+
+  initializePixelValues();
 }
 
 int randomIndexGuy = 0;
@@ -26,12 +28,11 @@ boolean isRecording = false;
 void keyPressed() {
   if (key == ' ') {
     isRecording = true;
+    //updateAndRender();
   }
 }
 
-void draw() {
-  background(255);
-
+void initializePixelValues() {
   int pixelValue = 0;
 
   for (int i = 0; i < testImage.pixels.length; i++) {
@@ -42,23 +43,62 @@ void draw() {
       int col = floor(i % grayScottModel.numColumns);
 
       grayScottModel.uValues[i] = 0.0;
-      grayScottModel.vValues[i] = 0.0;
+      grayScottModel.vValues[i] = 1.0;
     }
   }
+}
+
+int levelCount = 0;
+boolean updatingReactionDiffusion = true;
+
+void draw() {
+  updateAndRender();
+}
+
+void updateAndRender() {
+  background(255);
 
   if (mousePressed) {
     addFluidInput(clickSize);
   }
 
-  for (int i = 0; i < 16; i++) {
-    grayScottModel.update(timeDelta);
+  if (updatingReactionDiffusion) {
+    update();
   }
 
-  if (randomIndexGuy > 60) {
-    grayScottView.update();
-    randomIndexGuy = 0;
+  render();
+
+  randomIndexGuy++;
+}
+
+void update() {
+  if (updatingReactionDiffusion) {
+    for (int i = 0; i < 8; i++) {
+      grayScottModel.update(timeDelta);
+    }
+
+    if (randomIndexGuy > 10) {
+      if(randomIndexGuy == 0) {
+        if(levelCount >= 2) {
+          grayScottView.update();
+        }
+      } else {
+        grayScottView.update();
+      }
+      
+      levelCount++;
+
+      randomIndexGuy = 0;
+    }
   }
 
+  if (levelCount > 20) {
+    println("DONE");
+    updatingReactionDiffusion = false;
+  }
+}
+
+void render() {
   if (isRecording) {
     beginRecord("nervoussystem.obj.OBJExport", "obj/filename.obj");
   }
@@ -69,8 +109,6 @@ void draw() {
     isRecording = false;
     endRecord();
   }
-
-  randomIndexGuy++;
 }
 
 void addFluidInput(int size) {

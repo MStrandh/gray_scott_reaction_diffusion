@@ -2,7 +2,8 @@ class GrayScott3DView extends GrayScottView {
 
   int renderDepth = 0;
   int sphereCoords;
-
+  int cellDepth = 30;
+  
   FloatList xCoords;
   FloatList yCoords;
   FloatList zCoords;
@@ -24,8 +25,12 @@ class GrayScott3DView extends GrayScottView {
   int getClickedColumn(int posX) {
     return floor(posX / cellWidth);
   }
+  
+  int numVisible;
 
   void update() {
+    numVisible = 0;
+    
     int numRows = grayScottModel.numRows;
     int numCols = grayScottModel.numColumns;
 
@@ -36,21 +41,26 @@ class GrayScott3DView extends GrayScottView {
       for (int col = 0; col < numCols; col++) {
         float currValue = grayScottModel.vValues[row * numCols + col];
 
-        if (currValue > 0.1) {
+        if (currValue > 0.3) {
           xCoords.append(originX + (col * cellWidth));
           yCoords.append(originY + (row * cellHeight));
-          zCoords.append(renderDepth * cellHeight);
+          zCoords.append(renderDepth * cellDepth);
+          numVisible++;
         }
       }
     }
+    
+    println("Num visible: " + numVisible);
 
     renderDepth++;
   }
 
   void render() {
-    camera(mouseX*2, mouseY * 2, 500, 0, 0, 0, 0, 1, 0);    
+    float pX = 0.0;
+    float pY = 0.0;
+    
+    camera(0, 0, 2000, 0, 0, 0, 0, 1, 0);    
 
-    //directionalLight(255, 255, 255, 0, -1, 0);
     int numRows = grayScottModel.numRows;
     int numCols = grayScottModel.numColumns;
 
@@ -62,14 +72,14 @@ class GrayScott3DView extends GrayScottView {
 
     noStroke();
 
-    directionalLight(102, 102, 102, 0, 0, -1);
-    lightSpecular(204, 204, 204);
+    directionalLight(126, 126, 126, 0, 0, 1);
+    ambientLight(102, 102, 102);
 
     for (int i = 0; i < xCoords.size(); i++) {
       pushMatrix();
 
       translate(xCoords.get(i), yCoords.get(i), zCoords.get(i));
-      box(cellWidth);
+      box(cellWidth, cellHeight, cellDepth);
 
       popMatrix();
     }

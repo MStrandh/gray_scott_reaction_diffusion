@@ -27,7 +27,9 @@ class GrayScott2DView extends GrayScottView {
       int vCol = 255 - (int)(min(255, vVal * 768));
       int outputColor = vCol << 16 | vCol << 8 | vCol | 0xff000000;
 
-      pixels[i] = outputColor;
+      if(vVal > 0.2) {
+        pixels[i] = outputColor;
+      }
     }
 
     updatePixels();

@@ -3,7 +3,7 @@ class GrayScottReactionDiffusion {
   float dv = 0.03;
 
   float f = 0.023;
-  float k = 0.074;
+  float k = 0.079;
   float fk = f + k;
 
   float neighborDist = 0.04;
