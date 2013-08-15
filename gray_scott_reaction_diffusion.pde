@@ -1,4 +1,4 @@
-import nervoussystem.obj.*;
+
 
 int clickSize = 3;
 float timeDelta = 1;
@@ -18,19 +18,17 @@ void setup() {
   grayScottModel = new GrayScottReactionDiffusion(testImage.width, testImage.height);
 
   //grayScottView = new GrayScott2DView(grayScottModel);
-  grayScottView = new GrayScott3DView(grayScottModel);
+  //grayScottView = new GrayScott3DView(grayScottModel);
+  grayScottView = new RecordableView(grayScottModel, "grayScott");
 
   initializePixelValues();
 }
 
 int randomIndexGuy = 0;
-boolean isRecording = false;
+
 
 void keyPressed() {
-  if (key == ' ') {
-    isRecording = true;
-    //updateAndRender();
-  }
+  grayScottView.keyPressed();
 }
 
 void initializePixelValues() {
@@ -100,16 +98,7 @@ void update() {
 }
 
 void render() {
-  if (isRecording) {
-    beginRecord("nervoussystem.obj.OBJExport", "obj/filename.obj");
-  }
-
   grayScottView.render();
-
-  if (isRecording) {
-    isRecording = false;
-    endRecord();
-  }
 }
 
 void addFluidInput(int size) {

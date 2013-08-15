@@ -19,6 +19,9 @@ class GrayScottView {
     return 0;
   }
   
+  void keyPressed() {
+  }
+  
   void update() {
   }
   
