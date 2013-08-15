@@ -2,18 +2,22 @@ class GrayScott3DView extends GrayScottView {
 
   int renderDepth = 0;
   int sphereCoords;
-  int cellDepth = 30;
+  int cellDepth = 10;
   
   FloatList xCoords;
   FloatList yCoords;
   FloatList zCoords;
+  
+  ArcBallCamera arcBall;
 
   GrayScott3DView(GrayScottReactionDiffusion model) {
-    super(model, 4, 4);
+    super(model, 2, 2);
 
     xCoords = new FloatList();
     yCoords = new FloatList();
     zCoords = new FloatList();
+    
+    arcBall = new ArcBallCamera();
 
     size(grayScottModel.numColumns * cellWidth, grayScottModel.numRows * cellHeight, P3D);
   }
@@ -54,25 +58,13 @@ class GrayScott3DView extends GrayScottView {
 
     renderDepth++;
   }
-
+  
   void render() {
-    float pX = 0.0;
-    float pY = 0.0;
-    
-    camera(0, 0, 2000, 0, 0, 0, 0, 1, 0);    
-
-    int numRows = grayScottModel.numRows;
-    int numCols = grayScottModel.numColumns;
-
-    int originX = -((numCols * cellWidth) / 2);
-    int originY = -((numRows * cellHeight) / 2);
-
-    int numValues = grayScottModel.numValues;
-    int numLayers = ceil(xCoords.size() / numValues);
+    arcBall.update();
 
     noStroke();
 
-    directionalLight(126, 126, 126, 0, 0, 1);
+    directionalLight(126, 126, 126, 0, 0, -1);
     ambientLight(102, 102, 102);
 
     for (int i = 0; i < xCoords.size(); i++) {

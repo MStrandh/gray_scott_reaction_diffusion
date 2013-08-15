@@ -2,6 +2,7 @@ import nervoussystem.obj.*;
 
 int clickSize = 3;
 float timeDelta = 1;
+int iterationsPerFrame = 8;
 
 PImage testImage;
 
@@ -72,27 +73,27 @@ void updateAndRender() {
 }
 
 void update() {
-  if (updatingReactionDiffusion) {
-    for (int i = 0; i < 8; i++) {
-      grayScottModel.update(timeDelta);
-    }
-
-    if (randomIndexGuy > 10) {
-      if(randomIndexGuy == 0) {
-        if(levelCount >= 2) {
-          grayScottView.update();
-        }
-      } else {
-        grayScottView.update();
-      }
-      
-      levelCount++;
-
-      randomIndexGuy = 0;
-    }
+  for (int i = 0; i < iterationsPerFrame; i++) {
+    grayScottModel.update(timeDelta);
   }
 
-  if (levelCount > 20) {
+  if (randomIndexGuy > 10) {
+    if (randomIndexGuy == 0) {
+      if (levelCount >= 2) {
+        grayScottView.update();
+      }
+    } 
+    else {
+      grayScottView.update();
+    }
+
+    levelCount++;
+
+    randomIndexGuy = 0;
+  }
+
+
+  if (levelCount > 1) {
     println("DONE");
     updatingReactionDiffusion = false;
   }

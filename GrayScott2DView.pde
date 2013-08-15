@@ -14,6 +14,10 @@ class GrayScott2DView extends GrayScottView {
     return floor(posX / grayScottView.cellWidth);
   }
   
+  void update() {
+    
+  }
+  
   void render() {
     loadPixels();
     
@@ -27,7 +31,7 @@ class GrayScott2DView extends GrayScottView {
       int vCol = 255 - (int)(min(255, vVal * 768));
       int outputColor = vCol << 16 | vCol << 8 | vCol | 0xff000000;
 
-      if(vVal > 0.2) {
+      if(vVal > 0.0) {
         pixels[i] = outputColor;
       }
     }
